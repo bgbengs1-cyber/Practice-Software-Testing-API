@@ -24,19 +24,30 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install Newman and reporters
+      - name: Install standard HTML reporter
         run: |
-          npm install --no-save newman newman-reporter-html newman-reporter-htmlextra
+          npm install --prefix tools/html newman@4.6.1 newman-reporter-html@1.0.5
+
+      - name: Install HTML Extra reporter
+        run: |
+          npm install --prefix tools/htmlextra newman@6.2.3 newman-reporter-htmlextra@1.23.1
 
       - name: Create reports folder
         run: mkdir -p reports
 
-      - name: Run API tests
+      - name: Run standard HTML report
         run: |
-          npx newman run Toolshop-API.postman_collection.json \
-            --reporters cli,html,htmlextra \
-            --reporter-html-export reports/newman-report.html \
-            --reporter-htmlextra-export reports/newman-htmlextra.html
+          NODE_PATH=$GITHUB_WORKSPACE/tools/html/node_modules \
+          node tools/html/node_modules/newman/bin/newman.js run Toolshop-API.postman_collection.json \
+          --reporters cli,html \
+          --reporter-html-export reports/newman-report.html
+
+      - name: Run HTML Extra report
+        run: |
+          NODE_PATH=$GITHUB_WORKSPACE/tools/htmlextra/node_modules \
+          node tools/htmlextra/node_modules/newman/bin/newman.js run Toolshop-API.postman_collection.json \
+          --reporters cli,htmlextra \
+          --reporter-htmlextra-export reports/newman-htmlextra.html
 
       - name: Upload Newman reports
         if: always()

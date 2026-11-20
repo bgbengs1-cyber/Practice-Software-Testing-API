@@ -34,18 +34,17 @@ jobs:
 
       - name: Create reports folder
         run: mkdir -p reports
-
       - name: Run standard HTML report
         run: |
           NODE_PATH=$GITHUB_WORKSPACE/tools/html/node_modules \
-          node tools/html/node_modules/newman/bin/newman.js run run "Postman Assignment.postman_collection.json" \
+          node tools/html/node_modules/newman/bin/newman.js run "Postman Assignment.postman_collection.json" \
           --reporters cli,html \
           --reporter-html-export reports/newman-report.html
 
       - name: Run HTML Extra report
         run: |
           NODE_PATH=$GITHUB_WORKSPACE/tools/htmlextra/node_modules \
-          node tools/htmlextra/node_modules/newman/bin/newman.js run run "Postman Assignment.postman_collection.json" \
+          node tools/htmlextra/node_modules/newman/bin/newman.js run "Postman Assignment.postman_collection.json" \
           --reporters cli,htmlextra \
           --reporter-htmlextra-export reports/newman-htmlextra.html
 
